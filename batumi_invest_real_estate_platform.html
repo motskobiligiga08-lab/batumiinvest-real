@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ka" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batumi Invest - Premium Real Estate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#D4AF37',
+                            goldHover: '#B8952B',
+                            teal: '#0A4D68',
+                            tealDark: '#083344',
+                            dark: '#0F172A',
+                            cardDark: '#1E293B',
+                            accent: '#06B6D4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-brand-dark text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
+
+    <header class="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetFilters()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-brand-gold flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-teal/20">
+                    <i class="fa-solid font-bold fa-building-columns"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">BATUMI<span class="text-brand-gold">INVEST</span></span>
+                    <span class="block text-[10px] font-semibold text-brand-teal dark:text-brand-accent tracking-widest uppercase" id="navSubtitle">უძრავი ქონება ბათუმში</span>
+                </div>
+            </div>
+
+            <!-- Desktop Quick Controls & Actions -->
+            <div class="hidden md:flex items-center space-x-6">
+                <!-- Currency Toggle -->
+                <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700">
+                    <button id="curr-usd" onclick="setCurrency('USD')" class="px-3 py-1.5 rounded-md transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm">USD ($)</button>
+                    <button id="curr-gel" onclick="setCurrency('GEL')" class="px-3 py-1.5 rounded-md transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">GEL (₾)</button>
+                </div>
+
+                <!-- Language Selector -->
+                <div class="relative inline-block text-left">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-100 dark:bg-slate-800 text-xs font-medium rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-gold">
+                        <option value="GE">🇬🇪 GE</option>
+                        <option value="EN">🇬🇧 EN</option>
+                        <option value="RU">🇷🇺 RU</option>
+                    </select>
+                </div>
+
+                <!-- Dark/Light Theme Switcher -->
+                <button onclick="toggleTheme()" class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+
+                <!-- Add Listing CTA -->
+                <button onclick="openModal('addModal')" class="bg-gradient-to-r from-brand-gold to-brand-goldHover text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition transform active:scale-95 text-xs flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span id="btnAddPropNav">განცხადების დამატება</span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <div class="flex md:hidden items-center space-x-3">
+                <button onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                    <i id="themeIconMobile" class="fa-solid fa-moon text-sm"></i>
+                </button>
+                <button onclick="toggleMobileMenu()" class="text-slate-700 dark:text-slate-200 p-2 text-xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-brand-dark px-4 py-4 space-y-4">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" id="mCurrLabel">ვალუტა:</span>
+                <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg text-xs font-semibold">
+                    <button id="m-curr-usd" onclick="setCurrency('USD')" class="px-3 py-1 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white">USD ($)</button>
+                    <button id="m-curr-gel" onclick="setCurrency('GEL')" class="px-3 py-1 text-slate-500 dark:text-slate-400">GEL (₾)</button>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" id="mLangLabel">ენა:</span>
+                <select id="langSelectMobile" onchange="changeLanguage(this.value)" class="bg-slate-100 dark:bg-slate-800 text-xs font-medium rounded-lg px-3 py-1.5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                    <option value="GE">🇬🇪 ქართული</option>
+                    <option value="EN">🇬🇧 English</option>
+                    <option value="RU">🇷🇺 Русский</option>
+                </select>
+            </div>
+            <button onclick="openModal('addModal')" class="w-full bg-brand-gold text-slate-950 font-bold py-2.5 rounded-xl text-center text-sm shadow-md">
+                <i class="fa-solid fa-plus mr-1"></i> <span id="mBtnAdd">განცხადების დამატება</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="relative bg-gradient-to-b from-brand-tealDark to-slate-900 text-white pt-12 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"></div>
+        
+        <div class="relative max-w-5xl mx-auto text-center space-y-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brand-gold/20 text-brand-gold border border-brand-gold/30">
+                <i class="fa-solid fa-chart-line mr-1.5 text-xs"></i> <span id="heroBadge">მაღალშემოსავლიანი ინვესტიციები ბათუმში</span>
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight" id="heroTitle">
+                იპოვე იდეალური ბინა ან <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-200">საინვესტიციო ქონება</span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto font-light" id="heroSubtitle">
+                შავი ზღვის სანაპირო, ახალი ბულვარი, ორბი თაუერსი და ექსკლუზიური ვილები საუკეთესო ROI მაჩვენებლით.
+            </p>
+
+            <!-- Main Filter Panel -->
+            <div class="mt-8 bg-white dark:bg-brand-cardDark p-4 sm:p-6 rounded-2xl shadow-2xl text-slate-800 dark:text-slate-100 max-w-4xl mx-auto border border-slate-200/50 dark:border-slate-700/50 text-left">
+                <!-- Deal Type Chips -->
+                <div class="flex items-center space-x-2 border-b border-slate-200 dark:border-slate-700 pb-4 mb-4 overflow-x-auto hide-scrollbar">
+                    <button onclick="setDealType('all')" id="deal-all" class="deal-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-brand-teal text-white">ყველა</button>
+                    <button onclick="setDealType('buy')" id="deal-buy" class="deal-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">ყიდვა</button>
+                    <button onclick="setDealType('rent')" id="deal-rent" class="deal-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">ქირაობა</button>
+                    <button onclick="setDealType('invest')" id="deal-invest" class="deal-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 text-brand-gold">
+                        <i class="fa-solid fa-fire mr-1"></i> მაღალი ROI (%)
+                    </button>
+                </div>
+
+                <!-- Filter Controls Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Location / District -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1" id="lblDistrict">უბანი / ლოკაცია</label>
+                        <select id="filterDistrict" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-gold">
+                            <option value="all">ყველა უბანი</option>
+                            <option value="New Boulevard">ახალი ბულვარი</option>
+                            <option value="Old Batumi">ძველი ბათუმი</option>
+                            <option value="Orbi Towers">ორბი თაუერსი / პირველი ზოლი</option>
+                            <option value="Gonio/Kvariati">გონიო / კვარიათი</option>
+                            <option value="Makhinjauri">მახინჯაური / ჩაქვი</option>
+                        </select>
+                    </div>
+
+                    <!-- Property Type -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1" id="lblType">ქონების ტიპი</label>
+                        <select id="filterType" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-gold">
+                            <option value="all">ყველა ტიპი</option>
+                            <option value="Apartment">ბინა / აპარტამენტი</option>
+                            <option value="Villa">ვილა / სახლი</option>
+                            <option value="Commercial">კომერციული</option>
+                            <option value="Land">მიწის ნაკვეთი</option>
+                        </select>
+                    </div>
+
+                    <!-- Bedrooms -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1" id="lblBedrooms">საძინებლები</label>
+                        <select id="filterBeds" onchange="applyFilters()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-gold">
+                            <option value="all">ნებისმიერი</option>
+                            <option value="0">სტუდიო</option>
+                            <option value="1">1 საძინებელი</option>
+                            <option value="2">2 საძინებელი</option>
+                            <option value="3">3+ საძინებელი</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Input / Button -->
+                    <div class="flex items-end">
+                        <button onclick="applyFilters()" class="w-full bg-brand-teal hover:bg-brand-tealDark text-white font-bold py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-xs">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span id="btnSearch">ძებნა</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Secondary Quick Feature Tags -->
+                <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-2 items-center text-xs">
+                    <span class="text-slate-400 font-semibold mr-1" id="lblQuickTag">სწრაფი ფილტრი:</span>
+                    <button onclick="toggleFeatureTag('seaView')" id="tag-seaView" class="px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium hover:border-brand-gold">🌊 ზღვის ხედი</button>
+                    <button onclick="toggleFeatureTag('installment')" id="tag-installment" class="px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium hover:border-brand-gold">💳 შიდა განვადება</button>
+                    <button onclick="toggleFeatureTag('turnkey')" id="tag-turnkey" class="px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium hover:border-brand-gold">🔑 გასაღების ჩაბარებით</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Results Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <h2 class="text-2xl font-black text-slate-900 dark:text-white" id="secTitle">ხელმისაწვდომი ქონება ბათუმში</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" id="secSubtitle">მოიძებნა <span id="propertyCount" class="font-bold text-brand-teal dark:text-brand-accent">0</span> განცხადება</p>
+            </div>
+            
+            <!-- Sorting Dropdown -->
+            <div class="flex items-center space-x-2">
+                <span class="text-xs text-slate-500 font-semibold" id="lblSortBy">სორტირება:</span>
+                <select id="sortBy" onchange="applyFilters()" class="bg-white dark:bg-slate-800 text-xs font-semibold border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none">
+                    <option value="newest">ახალი დამატებული</option>
+                    <option value="price-asc">ფასი: დაბლიდან მაღლა</option>
+                    <option value="price-desc">ფასი: მაღლიდან დაბლა</option>
+                    <option value="roi">მაღალი ROI (%)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Property Grid Container -->
+        <div id="propertyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dynamic JavaScript Content Here -->
+        </div>
+
+        <!-- No Results Fallback -->
+        <div id="noResults" class="hidden text-center py-16 space-y-3">
+            <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 text-slate-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-building-circle-xmark"></i>
+            </div>
+            <h3 class="text-lg font-bold" id="txtNoResTitle">ქონება ვერ მოიძებნა</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto" id="txtNoResSub">გთხოვთ შეცვალოთ ძებნის კრიტერიუმები ან ფილტრები.</p>
+            <button onclick="resetFilters()" class="px-4 py-2 bg-brand-gold text-slate-950 rounded-xl text-xs font-bold">ფილტრების გასუფთავება</button>
+        </div>
+    </main>
+
+    <section class="bg-slate-100 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-brand-gold" id="calcTag">ინვესტორის ინსტრუმენტი</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white" id="calcTitle">გაიანგარიშე ROI და იპოთეკა</h2>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed" id="calcDesc">
+                    ბათუმში უძრავი ქონება ცნობილია მაღალი იჯარის უკუგებით (10%-15% წლიურად). გამოიყენეთ კალკულატორი მოსალოდნელი მოგების დასათვლელად.
+                </p>
+                
+                <div class="space-y-3 pt-2">
+                    <div class="flex items-center space-x-3 text-xs font-semibold">
+                        <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
+                        <span id="feat1">სეზონური და წლიური იჯარის პროგნოზი</span>
+                    </div>
+                    <div class="flex items-center space-x-3 text-xs font-semibold">
+                        <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
+                        <span id="feat2">სესხის ყოველთვიური შენატანი</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Embedded Interactive Calculator Widget -->
+            <div class="bg-white dark:bg-brand-cardDark p-6 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 space-y-4">
+                <h3 class="font-bold text-base text-slate-900 dark:text-white flex items-center justify-between">
+                    <span id="calcWidgetHeader">ROI & იპოთეკის კალკულატორი</span>
+                    <i class="fa-solid fa-calculator text-brand-gold"></i>
+                </h3>
+
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1">
+                        <span id="lblPropPrice">ქონების ღირებულება:</span>
+                        <span id="valPropPrice" class="text-brand-teal dark:text-brand-accent">$75,000</span>
+                    </div>
+                    <input type="range" id="inputPrice" min="30000" max="300000" step="5000" value="75000" oninput="updateCalculator()" class="w-full accent-brand-gold cursor-pointer">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1">
+                        <span id="lblMonthlyRent">მოსალოდნელი თვიური იჯარა:</span>
+                        <span id="valMonthlyRent" class="text-brand-teal dark:text-brand-accent">$850</span>
+                    </div>
+                    <input type="range" id="inputRent" min="300" max="3000" step="50" value="850" oninput="updateCalculator()" class="w-full accent-brand-gold cursor-pointer">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase" id="lblEstROI">წლიური ROI</span>
+                        <span id="resROI" class="text-lg font-black text-emerald-500">13.6%</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase" id="lblPayback">ამოღების ვადა</span>
+                        <span id="resPayback" class="text-lg font-black text-brand-gold">7.3 წელი</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-brand-cardDark w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 my-8 relative max-h-[90vh] flex flex-col">
+            <!-- Close Button -->
+            <button onclick="closeModal('detailModal')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-slate-900/60 hover:bg-slate-900 text-white rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="overflow-y-auto p-6 space-y-6">
+                <!-- Gallery Image -->
+                <div class="relative h-64 sm:h-80 rounded-xl overflow-hidden group">
+                    <img id="mImg" src="" alt="Property" class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 left-3 bg-slate-900/80 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center space-x-2">
+                        <i class="fa-solid fa-location-dot text-brand-gold"></i>
+                        <span id="mLocation"></span>
+                    </div>
+                </div>
+
+                <!-- Header Info -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span id="mBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-brand-gold/20 text-brand-gold"></span>
+                            <span id="mType" class="text-xs font-semibold text-slate-400"></span>
+                        </div>
+                        <h2 id="mTitle" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1"></h2>
+                    </div>
+                    <div>
+                        <span id="mPrice" class="text-2xl font-black text-brand-teal dark:text-brand-accent"></span>
+                    </div>
+                </div>
+
+                <!-- Specifications Table -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl text-center">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase" id="mLabelArea">ფართობი</span>
+                        <span id="mArea" class="font-extrabold text-sm text-slate-800 dark:text-slate-200"></span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl text-center">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase" id="mLabelBeds">საძინებელი</span>
+                        <span id="mBeds" class="font-extrabold text-sm text-slate-800 dark:text-slate-200"></span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl text-center">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase" id="mLabelFloor">სართული</span>
+                        <span id="mFloor" class="font-extrabold text-sm text-slate-800 dark:text-slate-200"></span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl text-center">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase" id="mLabelROI">სავარაუდო ROI</span>
+                        <span id="mROI" class="font-extrabold text-sm text-emerald-500"></span>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <h3 class="font-bold text-sm mb-2 text-slate-900 dark:text-white" id="mDescTitle">აღწერა</h3>
+                    <p id="mDesc" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+                </div>
+
+                <!-- Agent Contact Actions -->
+                <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3 w-full sm:w-auto">
+                        <div class="w-10 h-10 rounded-full bg-brand-gold/20 text-brand-gold flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-slate-900 dark:text-white" id="mAgentTitle">კონსულტანტი ბათუმში</span>
+                            <span class="text-[11px] text-slate-400">+995 599 00 00 00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <a id="btnWhatsApp" href="#" target="_blank" class="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a id="btnTelegram" href="#" target="_blank" class="flex-1 sm:flex-initial bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition">
+                            <i class="fa-brands fa-telegram text-sm"></i>
+                            <span>Telegram</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-brand-cardDark w-full max-w-lg rounded-2xl shadow-2xl p-6 border border-slate-200 dark:border-slate-700 relative my-8">
+            <button onclick="closeModal('addModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-1" id="addFormTitle">განცხადების დამატება</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6" id="addFormSub">გაყიდეთ ან გააქირავეთ თქვენი ქონება ბათუმში სწრაფად.</p>
+
+            <form onsubmit="submitProperty(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" id="lblFormTitle">სათაური</label>
+                    <input type="text" id="addTitle" required placeholder="მაგ: სტუდია ორბი თაუერსში ზღვის ხედით" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-gold outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" id="lblFormDeal">გარიგება</label>
+                        <select id="addDeal" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-gold outline-none">
+                            <option value="buy">იყიდება</option>
+                            <option value="rent">ქირავდება</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" id="lblFormDistrict">უბანი</label>
+                        <select id="addDistrict" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-gold outline-none">
+                            <option value="New Boulevard">ახალი ბულვარი</option>
+                            <option value="Old Batumi">ძველი ბათუმი</option>
+                            <option value="Orbi Towers">ორბი თაუერსი</option>
+                            <option value="Gonio/Kvariati">გონიო / კვარიათი</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" id="lblFormPrice">ფასი (USD $)</label>
+                        <input type="number" id="addPrice" required placeholder="55000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-gold outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" id="lblFormPhone">ტელეფონი</label>
+                        <input type="tel" id="addPhone" required placeholder="+995 5xx xx xx xx" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-gold outline-none">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-brand-gold to-brand-goldHover text-slate-950 font-bold py-3 rounded-xl shadow-lg text-xs mt-2 transition transform active:scale-98" id="btnSubmitForm">
+                    გაზიარება / განთავსება
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Contact Actions -->
+    <div class="fixed bottom-6 right-6 z-30 flex flex-col space-y-3">
+        <a href="https://wa.me/995599000000" target="_blank" title="WhatsApp" class="w-12 h-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-2xl transition transform hover:scale-110">
+            <i class="fa-brands fa-whatsapp text-2xl"></i>
+        </a>
+        <a href="https://t.me/batumi_invest_demo" target="_blank" title="Telegram" class="w-12 h-12 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center shadow-2xl transition transform hover:scale-110">
+            <i class="fa-brands fa-telegram text-2xl"></i>
+        </a>
+    </div>
+
+    <!-- Toast Notification Widget -->
+    <div id="toast" class="fixed bottom-6 left-6 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700 text-xs flex items-center space-x-3">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toastMsg">შეტყობინება</span>
+    </div>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-brand-dark py-8 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <span class="font-extrabold text-slate-900 dark:text-white">BATUMI<span class="text-brand-gold">INVEST</span></span>
+                <span>© 2026</span>
+            </div>
+            <p id="footerCopy">ბათუმის უძრავი ქონების უნივერსალური პლატფორმა</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // State Management
+        let currentCurrency = 'USD';
+        let currentLang = 'GE';
+        let selectedDealType = 'all';
+        let activeTags = { seaView: false, installment: false, turnkey: false };
+        let favorites = new Set();
+
+        const USD_TO_GEL = 2.70;
+
+        // Multilingual Dictionary
+        const i18n = {
+            GE: {
+                navSubtitle: 'უძრავი ქონება ბათუმში',
+                btnAddPropNav: 'განცხადების დამატება',
+                mBtnAdd: 'განცხადების დამატება',
+                heroBadge: 'მაღალშემოსავლიანი ინვესტიციები ბათუმში',
+                heroTitle: 'იპოვე იდეალური ბინა ან <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-200">საინვესტიციო ქონება</span>',
+                heroSubtitle: 'შავი ზღვის სანაპირო, ახალი ბულვარი, ორბი თაუერსი და ექსკლუზიური ვილები საუკეთესო ROI მაჩვენებლით.',
+                lblDistrict: 'უბანი / ლოკაცია',
+                lblType: 'ქონების ტიპი',
+                lblBedrooms: 'საძინებლები',
+                btnSearch: 'ძებნა',
+                lblQuickTag: 'სწრაფი ფილტრი:',
+                secTitle: 'ხელმისაწვდომი ქონება ბათუმში',
+                secSubtitle: 'მოიძებნა',
+                lblSortBy: 'სორტირება:',
+                txtNoResTitle: 'ქონება ვერ მოიძებნა',
+                txtNoResSub: 'გთხოვთ შეცვალოთ ძებნის კრიტერიუმები ან ფილტრები.',
+                calcTag: 'ინვესტორის ინსტრუმენტი',
+                calcTitle: 'გაიანგარიშე ROI და იპოთეკა',
+                calcDesc: 'ბათუმში უძრავი ქონება ცნობილია მაღალი იჯარის უკუგებით (10%-15% წლიურად). გამოიყენეთ კალკულატორი მოსალოდნელი მოგების დასათვლელად.',
+                feat1: 'სეზონური და წლიური იჯარის პროგნოზი',
+                feat2: 'სესხის ყოველთვიური შენატანი',
+                calcWidgetHeader: 'ROI & იპოთეკის კალკულატორი',
+                lblPropPrice: 'ქონების ღირებულება:',
+                lblMonthlyRent: 'მოსალოდნელი თვიური იჯარა:',
+                lblEstROI: 'წლიური ROI',
+                lblPayback: 'ამოღების ვადა',
+                mLabelArea: 'ფართობი',
+                mLabelBeds: 'საძინებელი',
+                mLabelFloor: 'სართული',
+                mLabelROI: 'სავარაუდო ROI',
+                mDescTitle: 'აღწერა',
+                mAgentTitle: 'კონსულტანტი ბათუმში',
+                addFormTitle: 'განცხადების დამატება',
+                addFormSub: 'გაყიდეთ ან გააქირავეთ თქვენი ქონება ბათუმში სწრაფად.',
+                lblFormTitle: 'სათაური',
+                lblFormDeal: 'გარიგება',
+                lblFormDistrict: 'უბანი',
+                lblFormPrice: 'ფასი (USD $)',
+                lblFormPhone: 'ტელეფონი',
+                btnSubmitForm: 'გაზიარება / განთავსება',
+                footerCopy: 'ბათუმის უძრავი ქონების უნივერსალური პლატფორმა'
+            },
+            EN: {
+                navSubtitle: 'Batumi Real Estate',
+                btnAddPropNav: 'Add Listing',
+                mBtnAdd: 'Add Listing',
+                heroBadge: 'High ROI Investments in Batumi',
+                heroTitle: 'Find Your Ideal Home or <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-200">Investment Property</span>',
+                heroSubtitle: 'Black Sea seafront, New Boulevard, Orbi Towers and luxury villas with optimal ROI.',
+                lblDistrict: 'District / Location',
+                lblType: 'Property Type',
+                lblBedrooms: 'Bedrooms',
+                btnSearch: 'Search',
+                lblQuickTag: 'Quick Filter:',
+                secTitle: 'Available Properties in Batumi',
+                secSubtitle: 'Found',
+                lblSortBy: 'Sort by:',
+                txtNoResTitle: 'No Properties Found',
+                txtNoResSub: 'Please adjust your search criteria or filters.',
+                calcTag: 'Investor Tool',
+                calcTitle: 'Calculate ROI & Mortgage',
+                calcDesc: 'Batumi real estate is renowned for high rental yields (10%-15% annually). Use our calculator to project earnings.',
+                feat1: 'Seasonal & Annual Yield Forecast',
+                feat2: 'Monthly Mortgage Estimation',
+                calcWidgetHeader: 'ROI & Mortgage Calculator',
+                lblPropPrice: 'Property Price:',
+                lblMonthlyRent: 'Est. Monthly Rent:',
+                lblEstROI: 'Annual ROI',
+                lblPayback: 'Payback Period',
+                mLabelArea: 'Area',
+                mLabelBeds: 'Bedrooms',
+                mLabelFloor: 'Floor',
+                mLabelROI: 'Est. ROI',
+                mDescTitle: 'Description',
+                mAgentTitle: 'Batumi Investment Advisor',
+                addFormTitle: 'Add Property Listing',
+                addFormSub: 'Sell or rent your Batumi property quickly.',
+                lblFormTitle: 'Title',
+                lblFormDeal: 'Deal Type',
+                lblFormDistrict: 'District',
+                lblFormPrice: 'Price (USD $)',
+                lblFormPhone: 'Phone Number',
+                btnSubmitForm: 'Submit Property',
+                footerCopy: 'Universal Real Estate Platform in Batumi'
+            },
+            RU: {
+                navSubtitle: 'Недвижимость в Батуми',
+                btnAddPropNav: 'Добавить объявление',
+                mBtnAdd: 'Добавить объявление',
+                heroBadge: 'Высокодоходные инвестиции в Батуми',
+                heroTitle: 'Найдите идеальное жилье или <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-200">инвестиционный объект</span>',
+                heroSubtitle: 'Побережье Черного моря, Новый бульвар, Орби Тауэрс и виллы с высокой окупаемостью.',
+                lblDistrict: 'Район / Локация',
+                lblType: 'Тип недвижимости',
+                lblBedrooms: 'Спальни',
+                btnSearch: 'Поиск',
+                lblQuickTag: 'Быстрый фильтр:',
+                secTitle: 'Доступная недвижимость в Батуми',
+                secSubtitle: 'Найдено',
+                lblSortBy: 'Сортировка:',
+                txtNoResTitle: 'Объекты не найдены',
+                txtNoResSub: 'Пожалуйста, измените параметры поиска.',
+                calcTag: 'Инструмент инвестора',
+                calcTitle: 'Рассчитайте ROI и ипотеку',
+                calcDesc: 'Недвижимость в Батуми славится высокой арендной доходностью (10%-15% в год). Рассчитайте вашу прибыль.',
+                feat1: 'Прогноз сезонного и годового дохода',
+                feat2: 'Ежемесячный платеж по ипотеке',
+                calcWidgetHeader: 'Калькулятор ROI и Ипотеки',
+                lblPropPrice: 'Стоимость объекта:',
+                lblMonthlyRent: 'Ожидаемая аренда:',
+                lblEstROI: 'Годовой ROI',
+                lblPayback: 'Окупаемость',
+                mLabelArea: 'Площадь',
+                mLabelBeds: 'Спальни',
+                mLabelFloor: 'Этаж',
+                mLabelROI: 'Расчетный ROI',
+                mDescTitle: 'Описание',
+                mAgentTitle: 'Консультант в Батуми',
+                addFormTitle: 'Добавить объявление',
+                addFormSub: 'Продайте или сдайте вашу недвижимость быстро.',
+                lblFormTitle: 'Заголовок',
+                lblFormDeal: 'Сделка',
+                lblFormDistrict: 'Район',
+                lblFormPrice: 'Цена (USD $)',
+                lblFormPhone: 'Телефон',
+                btnSubmitForm: 'Опубликовать',
+                footerCopy: 'Платформа недвижимости в Батуми'
+            }
+        };
+
+        // Realistic Batumi Properties Dataset
+        let properties = [
+            {
+                id: 1,
+                title: 'Orbi City Studio with Direct Panoramic Sea View',
+                deal: 'buy',
+                district: 'Orbi Towers',
+                type: 'Apartment',
+                beds: 0,
+                area: 33,
+                floor: '28/45',
+                priceUSD: 49500,
+                roi: 13.8,
+                seaView: true,
+                installment: false,
+                turnkey: true,
+                image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
+                desc: 'полностью обустроенная студия под ключ в первой линии от моря. Отличный вариант для сдачи в аренду через Booking/Airbnb.'
+            },
+            {
+                id: 2,
+                title: '2-Bedroom Apartment on New Boulevard',
+                deal: 'buy',
+                district: 'New Boulevard',
+                type: 'Apartment',
+                beds: 2,
+                area: 68,
+                floor: '12/18',
+                priceUSD: 89000,
+                roi: 11.2,
+                seaView: true,
+                installment: true,
+                turnkey: true,
+                image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+                desc: 'თანამედროვე რემონტით, ავეჯითა და ტექნიკით აღჭურვილი ბინა ახალ ბულვართან. მოქმედებს შიდა უპროცენტო განვადება.'
+            },
+            {
+                id: 3,
+                title: 'Luxury Villa with Private Pool in Gonio',
+                deal: 'buy',
+                district: 'Gonio/Kvariati',
+                type: 'Villa',
+                beds: 3,
+                area: 210,
+                floor: '1-2/2',
+                priceUSD: 245000,
+                roi: 9.5,
+                seaView: true,
+                installment: false,
+                turnkey: true,
+                image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80',
+                desc: 'ექსკლუზიური ვილა ეკოლოგიურად სუფთა ზონაში, კერძო აუზითა და ზღვის ხედით.'
+            },
+            {
+                id: 4,
+                title: 'Long-term High Floor Rental in Old Batumi',
+                deal: 'rent',
+                district: 'Old Batumi',
+                type: 'Apartment',
+                beds: 1,
+                area: 52,
+                floor: '5/8',
+                priceUSD: 700, // monthly
+                roi: 0,
+                seaView: false,
+                installment: false,
+                turnkey: true,
+                image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80',
+                desc: 'ქირავდება ხანგრძლივად ძველ ბათუმში, ისტორიულ უბანში. ცენტრალური გათბობა, კონდიციონერი.'
+            },
+            {
+                id: 5,
+                title: 'Commercial Space near Batumi Mall',
+                deal: 'buy',
+                district: 'Old Batumi',
+                type: 'Commercial',
+                beds: 0,
+                area: 120,
+                floor: '1/10',
+                priceUSD: 185000,
+                roi: 14.2,
+                seaView: false,
+                installment: true,
+                turnkey: false,
+                image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+                desc: 'საუკეთესო საინვესტიციო კომერციული ფართი ხალხმრავალ ქუჩაზე.'
+            },
+            {
+                id: 6,
+                title: 'Beachfront Studio in Makhinjauri Horizon',
+                deal: 'buy',
+                district: 'Makhinjauri',
+                type: 'Apartment',
+                beds: 0,
+                area: 38,
+                floor: '9/22',
+                priceUSD: 42000,
+                roi: 12.5,
+                seaView: true,
+                installment: true,
+                turnkey: true,
+                image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80',
+                desc: 'აპარტამენტი მახინჯაურის პირველ ზოლში, მწვანე კონცხთან ახლოს.'
+            }
+        ];
+
+        // Core Functions
+        function initApp() {
+            applyFilters();
+            updateCalculator();
+        }
+
+        function setCurrency(curr) {
+            currentCurrency = curr;
+            document.querySelectorAll('#curr-usd, #m-curr-usd').forEach(el => {
+                el.className = curr === 'USD' ? 'px-3 py-1.5 rounded-md transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'px-3 py-1.5 rounded-md transition-all text-slate-500 dark:text-slate-400';
+            });
+            document.querySelectorAll('#curr-gel, #m-curr-gel').forEach(el => {
+                el.className = curr === 'GEL' ? 'px-3 py-1.5 rounded-md transition-all bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'px-3 py-1.5 rounded-md transition-all text-slate-500 dark:text-slate-400';
+            });
+            applyFilters();
+            updateCalculator();
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('langSelect').value = lang;
+            document.getElementById('langSelectMobile').value = lang;
+            
+            const dict = i18n[lang];
+            for (const key in dict) {
+                const el = document.getElementById(key);
+                if (el) el.innerHTML = dict[key];
+            }
+            applyFilters();
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            const iconClass = isDark ? 'fa-solid fa-sun text-yellow-400' : 'fa-solid fa-moon text-sm';
+            document.getElementById('themeIcon').className = iconClass;
+            document.getElementById('themeIconMobile').className = iconClass;
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        function setDealType(type) {
+            selectedDealType = type;
+            document.querySelectorAll('.deal-btn').forEach(btn => {
+                btn.className = 'deal-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200';
+            });
+            const activeBtn = document.getElementById(`deal-${type}`);
+            if (activeBtn) {
+                activeBtn.className = 'deal-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-brand-teal text-white shadow-md';
+            }
+            applyFilters();
+        }
+
+        function toggleFeatureTag(tag) {
+            activeTags[tag] = !activeTags[tag];
+            const btn = document.getElementById(`tag-${tag}`);
+            if (activeTags[tag]) {
+                btn.classList.add('border-brand-gold', 'bg-brand-gold/10', 'text-brand-gold');
+            } else {
+                btn.classList.remove('border-brand-gold', 'bg-brand-gold/10', 'text-brand-gold');
+            }
+            applyFilters();
+        }
+
+        function toggleFavorite(id, event) {
+            event.stopPropagation();
+            if (favorites.has(id)) {
+                favorites.delete(id);
+                showToast('წაშლილია ფავორიტებიდან');
+            } else {
+                favorites.add(id);
+                showToast('დაემატა ფავორიტებში!');
+            }
+            applyFilters();
+        }
+
+        function formatPrice(usdVal) {
+            if (currentCurrency === 'GEL') {
+                const gelVal = Math.round(usdVal * USD_TO_GEL);
+                return `₾${gelVal.toLocaleString()}`;
+            }
+            return `$${usdVal.toLocaleString()}`;
+        }
+
+        // Filter and Render Logic
+        function applyFilters() {
+            const district = document.getElementById('filterDistrict').value;
+            const type = document.getElementById('filterType').value;
+            const beds = document.getElementById('filterBeds').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filtered = properties.filter(item => {
+                if (selectedDealType === 'buy' && item.deal !== 'buy') return false;
+                if (selectedDealType === 'rent' && item.deal !== 'rent') return false;
+                if (selectedDealType === 'invest' && item.roi < 11) return false;
+
+                if (district !== 'all' && item.district !== district) return false;
+                if (type !== 'all' && item.type !== type) return false;
+                if (beds !== 'all' && item.beds !== parseInt(beds)) return false;
+
+                if (activeTags.seaView && !item.seaView) return false;
+                if (activeTags.installment && !item.installment) return false;
+                if (activeTags.turnkey && !item.turnkey) return false;
+
+                return true;
+            });
+
+            // Sorting
+            if (sortBy === 'price-asc') filtered.sort((a,b) => a.priceUSD - b.priceUSD);
+            if (sortBy === 'price-desc') filtered.sort((a,b) => b.priceUSD - a.priceUSD);
+            if (sortBy === 'roi') filtered.sort((a,b) => b.roi - a.roi);
+
+            document.getElementById('propertyCount').innerText = filtered.length;
+            renderGrid(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterDistrict').value = 'all';
+            document.getElementById('filterType').value = 'all';
+            document.getElementById('filterBeds').value = 'all';
+            setDealType('all');
+            activeTags = { seaView: false, installment: false, turnkey: false };
+            document.querySelectorAll("[id^='tag-']").forEach(b => b.classList.remove('border-brand-gold', 'bg-brand-gold/10', 'text-brand-gold'));
+            applyFilters();
+        }
+
+        function renderGrid(items) {
+            const grid = document.getElementById('propertyGrid');
+            const noRes = document.getElementById('noResults');
+
+            if (items.length === 0) {
+                grid.innerHTML = '';
+                noRes.classList.remove('hidden');
+                return;
+            }
+
+            noRes.classList.add('hidden');
+            grid.innerHTML = items.map(p => {
+                const isFav = favorites.has(p.id);
+                return `
+                <div onclick="openDetailModal(${p.id})" class="bg-white dark:bg-brand-cardDark rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 border border-slate-200/80 dark:border-slate-800 flex flex-col cursor-pointer group">
+                    <!-- Card Image -->
+                    <div class="relative h-52 overflow-hidden">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute top-3 left-3 flex flex-wrap gap-1">
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wide bg-slate-900/80 backdrop-blur-md text-white">
+                                ${p.deal === 'buy' ? 'იყიდება' : 'ქირავდება'}
+                            </span>
+                            ${p.roi > 0 ? `<span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-500 text-white shadow-md">ROI ${p.roi}%</span>` : ''}
+                        </div>
+                        <button onclick="toggleFavorite(${p.id}, event)" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-red-500 transition">
+                            <i class="${isFav ? 'fa-solid text-red-500' : 'fa-regular'} fa-heart text-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-[11px] font-bold text-brand-gold uppercase tracking-wider mb-1">
+                                <i class="fa-solid fa-location-dot mr-1"></i>${p.district}
+                            </div>
+                            <h3 class="font-extrabold text-slate-900 dark:text-white text-base line-clamp-2 leading-snug group-hover:text-brand-gold transition">
+                                ${p.title}
+                            </h3>
+                        </div>
+
+                        <!-- Quick Specs -->
+                        <div class="grid grid-cols-3 gap-2 py-2 border-y border-slate-100 dark:border-slate-800 text-center text-xs">
+                            <div>
+                                <span class="block text-[10px] text-slate-400 font-semibold uppercase">ფართი</span>
+                                <span class="font-bold text-slate-700 dark:text-slate-300">${p.area} მ²</span>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-slate-400 font-semibold uppercase">ოთახი</span>
+                                <span class="font-bold text-slate-700 dark:text-slate-300">${p.beds === 0 ? 'სტუდიო' : p.beds}</span>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-slate-400 font-semibold uppercase">სართული</span>
+                                <span class="font-bold text-slate-700 dark:text-slate-300">${p.floor}</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="flex items-center justify-between pt-1">
+                            <div>
+                                <span class="text-xs text-slate-400 font-medium block">ფასი:</span>
+                                <span class="text-xl font-black text-brand-teal dark:text-brand-accent">${formatPrice(p.priceUSD)}${p.deal === 'rent' ? '/თვე' : ''}</span>
+                            </div>
+                            <div class="flex space-x-1" onclick="event.stopPropagation()">
+                                <a href="https://wa.me/995599000000?text=Hello,%20interested%20in%20property%20ID:${p.id}" target="_blank" class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                                </a>
+                                <a href="https://t.me/batumi_invest_demo" target="_blank" class="w-8 h-8 rounded-lg bg-sky-100 dark:bg-sky-950/50 text-sky-600 dark:text-sky-400 flex items-center justify-center hover:bg-sky-500 hover:text-white transition">
+                                    <i class="fa-brands fa-telegram text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Dynamic Detail Modal
+        function openDetailModal(id) {
+            const p = properties.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('mImg').src = p.image;
+            document.getElementById('mLocation').innerText = `${p.district}, ბათუმი`;
+            document.getElementById('mBadge').innerText = p.deal === 'buy' ? 'იყიდება' : 'ქირავდება';
+            document.getElementById('mType').innerText = p.type;
+            document.getElementById('mTitle').innerText = p.title;
+            document.getElementById('mPrice').innerText = `${formatPrice(p.priceUSD)}${p.deal === 'rent' ? '/თვე' : ''}`;
+            document.getElementById('mArea').innerText = `${p.area} მ²`;
+            document.getElementById('mBeds').innerText = p.beds === 0 ? 'სტუდიო' : `${p.beds} საძინებელი`;
+            document.getElementById('mFloor').innerText = p.floor;
+            document.getElementById('mROI').innerText = p.roi > 0 ? `${p.roi}% წლიურად` : 'N/A';
+            document.getElementById('mDesc').innerText = p.desc;
+
+            document.getElementById('btnWhatsApp').href = `https://wa.me/995599000000?text=Interested%20in%20${encodeURIComponent(p.title)}`;
+            document.getElementById('btnTelegram').href = `https://t.me/batumi_invest_demo`;
+
+            openModal('detailModal');
+        }
+
+        // Mortgage & ROI Calculator
+        function updateCalculator() {
+            const price = parseInt(document.getElementById('inputPrice').value);
+            const rent = parseInt(document.getElementById('inputRent').value);
+
+            document.getElementById('valPropPrice').innerText = formatPrice(price);
+            document.getElementById('valMonthlyRent').innerText = formatPrice(rent);
+
+            const annualRentUSD = rent * 12;
+            const priceUSD = currentCurrency === 'GEL' ? price / USD_TO_GEL : price;
+            const rentUSD = currentCurrency === 'GEL' ? annualRentUSD / USD_TO_GEL : annualRentUSD;
+
+            const roi = ((rentUSD / priceUSD) * 100).toFixed(1);
+            const paybackYears = (priceUSD / rentUSD).toFixed(1);
+
+            document.getElementById('resROI').innerText = `${roi}%`;
+            document.getElementById('resPayback').innerText = `${paybackYears} წელი`;
+        }
+
+        // Modal Helpers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function submitProperty(e) {
+            e.preventDefault();
+            const newProp = {
+                id: Date.now(),
+                title: document.getElementById('addTitle').value,
+                deal: document.getElementById('addDeal').value,
+                district: document.getElementById('addDistrict').value,
+                type: 'Apartment',
+                beds: 1,
+                area: 45,
+                floor: '10/20',
+                priceUSD: parseInt(document.getElementById('addPrice').value) || 50000,
+                roi: 11.5,
+                seaView: true,
+                installment: false,
+                turnkey: true,
+                image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
+                desc: 'მომხმარებლის მიერ ახლახან დამატებული ქონება ბათუმში.'
+            };
+
+            properties.unshift(newProp);
+            closeModal('addModal');
+            applyFilters();
+            showToast('თქვენი განცხადება წარმატებით დაემატა!');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // Initialize on Load
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</body>
+</html>
